@@ -21,8 +21,49 @@ class ParkingController extends Controller
 
     public static function validateParking($data)
     {
-        $parking = Parking::where('parking_mumber', $data['parking_number_selected'])->first();
+        $parking_type_to_select = '';
+        if ($data['type'] == 1) {
+            $parking_type_to_select = 'A';
+        } elseif ($data['type'] == 2) {
+            $parking_type_to_select = 'B';
+        } elseif ($data['type'] == 3) {
+            $parking_type_to_select = 'M';
+        }
 
+        $parkings_avaliables = Parking::where('parking_type', $parking_type_to_select)
+            ->where('parking_ocupation', 0)
+            ->pluck('id')->toArray();
+
+        $parking = '';
+        if ($data->random == true) {
+            $parking = Parking::find($parkings_avaliables[array_rand($parkings_avaliables)]);
+            $parking->parking_ocupation = 1;
+            $parking->save();
+            return $parking;
+        } else {
+            $parking = Parking::where('parking_number', $data['parking_number_selected'])->first();
+            $parking->parking_ocupation = 1;
+            $parking->save();
+        }
         return $parking;
+    }
+
+    public function storeParkingWithPlate(Request $request)
+    {
+        $data = $request->all();
+        $data['type'] = VehicleUser::where('vehicle_plate', $data['vehicle_plate'])
+        ->select('id_vehicle_type')
+        ->first();
+        
+        $parking->vehicle_plate = $data['vehicle_plate'];
+        $parking->save();
+
+        $parking = $this.validateParking($data);
+        $ticket = TicketController::storeTicket($data);
+
+        return response()->json([
+            'parking' => $parking,
+            'code' => 201,
+        ]);
     }
 }
