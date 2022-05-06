@@ -14,7 +14,7 @@ class CreateVehicleUsersTable extends Migration
     public function up()
     {
         Schema::create('vehicle_users', function (Blueprint $table) {
-            $table->string('vehicle_plate')->primaryKey();
+            $table->string('vehicle_plate')->primaryKey()->unique();
             $table->string('vehicle_brand');
             $table->integer('vehicle_model');
             $table->unsignedBigInteger('id_vehicle_type');

@@ -26,7 +26,7 @@ class VehicleUserController extends Controller
     {
         $vehicleUser = new VehicleUser();
         $vehicleUser->document_number = $data['document_number'];
-        $vehicleUser->vehicle_plate = $data['plate'];
+        $vehicleUser->vehicle_plate = $data['vehicle_plate'];
         $vehicleUser->vehicle_brand = $data['brand'];
         $vehicleUser->vehicle_model = $data['model'];
         $vehicleUser->id_vehicle_type = $data['type'];

@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigInteger('document_number')->primaryKey();
+            $table->bigInteger('document_number')->primaryKey()->unique();
             $table->string('name');
             $table->timestamps();
         });

@@ -55,9 +55,9 @@ class DiscountController extends Controller
         ]);
     }
 
-    public function editDiscount(Request $request, $id)
+    public function editDiscount(Request $request)
     {
-        $discount = Discount::find($id);
+        $discount = Discount::find($request->id);
 
         if (!$discount) {
             return response()->json([
@@ -99,9 +99,9 @@ class DiscountController extends Controller
         ]);
     }
 
-    public function deleteDiscount($id)
+    public function deleteDiscount(Request $request)
     {
-        $discount = Discount::find($id);
+        $discount = Discount::find($request->id);
 
         if (!$discount) {
             return response()->json([
