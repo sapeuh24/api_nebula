@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Parking;
+use App\Models\VehicleUser;
+use App\Http\Controllers\TicketController;
 
 class ParkingController extends Controller
 {
@@ -50,19 +52,19 @@ class ParkingController extends Controller
 
     public function storeParkingWithPlate(Request $request)
     {
-        $data = $request->all();
-        $data['type'] = VehicleUser::where('vehicle_plate', $data['vehicle_plate'])
+        $tipe= VehicleUser::where('vehicle_plate', $request['vehicle_plate'])
         ->select('id_vehicle_type')
         ->first();
+        $request['type'] = $tipe->id_vehicle_type;
         
-        $parking->vehicle_plate = $data['vehicle_plate'];
-        $parking->save();
-
-        $parking = $this.validateParking($data);
-        $ticket = TicketController::storeTicket($data);
+        $parking = $this->validateParking($request);
+        
+        $request['parking_number_selected'] = $parking->id;
+        $ticket = TicketController::storeTicket($request);
 
         return response()->json([
             'parking' => $parking,
+            'ticket' => $ticket->original,
             'code' => 201,
         ]);
     }
