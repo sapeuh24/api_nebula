@@ -64,14 +64,21 @@ class TicketController extends Controller
                 ->first();
             }
         }
+
+        if ($discount) {
+            $fee_value = (int) $totalDurationMinutes * $fee->fee;
+    
+            $fee_discount = $fee_value * $discount->discount / 100;
+    
+            $ticket->total_value = $fee_value - $fee_discount;
+            $ticket->discount_value = $fee_discount;
+            $ticket->save();
+        } else {
+            $ticket->total_value = $totalDurationMinutes * $fee->fee;
+            $ticket->discount_value = 0;
+            $ticket->save();
+        }
         
-        $fee_value = (int) $totalDurationMinutes * $fee->fee;
-
-        $fee_discount = $fee_value * $discount->discount / 100;
-
-        $ticket->total_value = $fee_value - $fee_discount;
-        $ticket->discount_value = $fee_discount;
-        $ticket->save();
 
         $parking = Parking::find($request->id_parking);
         $parking->parking_ocupation = 0;
@@ -87,7 +94,8 @@ class TicketController extends Controller
             'vehicle_users.vehicle_model',
             'vehicle_types.type',
             'users.name',
-        );
+        )
+        ->first();
 
         return response()->json([
             'ticket' => $ticket,
