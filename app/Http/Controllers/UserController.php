@@ -65,9 +65,9 @@ class UserController extends Controller
             ]);
     }
 
-    public function validateUser(Request $request)
+    public function validateUser($document_number)
     {
-        $user = User::where('document_number', $request->document_number)->first();
+        $user = User::where('document_number', $document_number)->first();
 
         if ($user) {
             $vehicles = VehicleUserController::getVehicleUsers($user->document_number);

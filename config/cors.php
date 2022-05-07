@@ -19,9 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:8080', '*', 'http://192.168.0.4:8080'],
+    'allowed_origins' => ['http://localhost:8080', '*', 'http://192.168.0.4:8080', 'http://api.nebula.eclipseweb.co'],
 
-    'allowed_origins_patterns' => ['http://localhost:8080', '*', 'http://192.168.0.4:8080'],
+    'allowed_origins_patterns' => ['http://localhost:8080', '*', 'http://192.168.0.4:8080', 'http://api.nebula.eclipseweb.co'],
 
     'allowed_headers' => ['*'],
 

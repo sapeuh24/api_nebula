@@ -19,7 +19,7 @@ class ReportingController extends Controller
         }
 
         $count_tickets = Ticket::whereBetween('created_at', [$dateFrom, $dateTo])
-        ->groupBy('id_parking')
+        ->groupBy('id_parking', 'parking_type')
         ->orderBy('total', 'desc')
         ->selectRaw('count(*) as total, id_parking')
         ->selectRaw('parking_type')
