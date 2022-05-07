@@ -22,6 +22,8 @@ class ReportingController extends Controller
         ->groupBy('id_parking')
         ->orderBy('total', 'desc')
         ->selectRaw('count(*) as total, id_parking')
+        ->selectRaw('parking_type')
+        ->join('parkings', 'tickets.id_parking', 'parkings.id')
         ->first();
 
         return response()->json([
@@ -61,7 +63,8 @@ class ReportingController extends Controller
             $dateTo = $request->to.':23:59:59';
         }
                
-        $tickets = VehicleUser::select('vehicle_plate', 'vehicle_brand', 'vehicle_model', 'id_vehicle_type')
+        $tickets = VehicleUser::select('vehicle_plate', 'vehicle_brand', 'vehicle_model', 'type')
+        ->join('vehicle_types', 'vehicle_types.id', 'vehicle_users.id_vehicle_type')
         ->with(['tickets' => function ($t) use ($dateFrom, $dateTo) {
             $t->select('id', 'discount_value', 'initial_time', 'final_time', 'total_value', 'vehicle_plate');
             $t->where('final_time', '!=', null);
@@ -86,6 +89,7 @@ class ReportingController extends Controller
 
         $tickets = Ticket::whereBetween('created_at', [$dateFrom, $dateTo])
         ->selectRaw('sum(total_value) as total')
+        ->selectRaw('count(id) as total_tickets')
         ->get();
 
         return response()->json([
